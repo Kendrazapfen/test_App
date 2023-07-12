@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test_APP</title>
+<script>
+    let month =[];
+    let day =[];
+    let deleted_month=[];
+    let deleted_day =[];
+
+    load();
+    loadDel();
+
+function render(){
+    let date = document.getElementById('date');
+    date.innerHTML ='';
+    date.innerHTML =`<div> 
+        <h1>Geburtstag: </h1>
+        <input type="text" required placeholder="Monat" id="month">
+        <input type="number" required min="1" max="31" placeholder="Tag" id="day">
+        <button onclick="addDate()">Hinzufügen</button>
+        </div>`;
+        for (let i = 0; i < month.length; i++) {
+            const word = month[i];
+            const number = day[i];
+            date.innerHTML +=`<div class="new_date"> ${word} ${number}
+                                <button   onclick="delDate(${i})">Löschen?</button>
+                                </div>`;
+        delRender();                        
+        }
+        
+}
+
+function delRender(i){
+    let retoure = document.getElementById('retoure');
+    retoure.innerHTML ='';
+    for (let i = 0; i < deleted_month.length; i++) {
+    `<div class="trash_bin"> 
+        <h2>Papierkorb: </h2>
+        <button id="trash" onclick="delFinally(${i})">Endgültiges Löschen</button>
+        </div>`;                              
+    }     
+
+}
+function addDate(){
+    let output = document.getElementById('month');
+    let outputday = document.getElementById('day');
+    month.push(output.value);
+    day.push(outputday.value);
+
+   render();
+   save(); 
+}
+function delDate(i) {
+    deleted_month.push(month[i]);
+    deleted_day.push(day[i]);
+    month.splice(i,1);
+    day.splice(i,1);
+    
+    saveDel();
+    render();
+    save();
+}
+function save(){
+    let monthAsText = JSON.stringify(month);
+    localStorage.setItem('month',monthAsText);
+    let dayAsText = JSON.stringify(day);
+    localStorage.setItem('day',dayAsText);
+    
+}
+function load(){
+    let monthAsText = localStorage.getItem('month');
+    let dayAsText = localStorage.getItem('day');
+    if(monthAsText&&dayAsText){
+        month = JSON.parse(monthAsText);
+        day = JSON.parse(dayAsText);
+    }
+}
+function saveDel(){
+    let deleted_monthAsText =JSON.stringify(deleted_month);
+    localStorage.setItem('deleted_month',deleted_monthAsText);
+    let deleted_dayAsText = JSON.stringify(deleted_day);
+    localStorage.setItem('deleted_day',deleted_dayAsText);
+}
+function loadDel(){
+    let deleted_monthAsText = localStorage.getItem('deleted_month');
+    let deleted_dayAsText = localStorage.getItem('deleted_day');
+    if(deleted_monthAsText&&deleted_dayAsText){
+        deleted_month = JSON.parse(deleted_monthAsText);
+        deleted_day = JSON.parse(deleted_dayAsText);
+    }
+}
+function delFinally(i){
+    let trash = document.getElementById('trash');
+    trash.innerHTML ='';
+   
+
+}
+
+
+</script>
+<style>
+    .new_date{
+        background-color: aqua;
+        width: 100px;
+        height: 100px;
+        border: 4px solid blue;
+        border-radius: 10%;
+    }
+    .trash_bin{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 500px;
+        height: 500px;
+        background-color: aquamarine;
+
+    }
+</style>
+</head>
+<body onload="render()">
+    <div id="retoure"></div>
+    <div id="date">
+        
+        
+    </div>
+</body>
+</html>
